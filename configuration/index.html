@@ -343,6 +343,18 @@
 </tr>
 
 <tr>
+<td>PAASBOX_LB_LOG</td>
+<td>n</td>
+<td>Enable load balancer logging</td>
+</tr>
+
+<tr>
+<td>PAASBOX_LOG</td>
+<td></td>
+<td>Logstash endpoint for centralised logging</td>
+</tr>
+
+<tr>
 <td>PAASBOX_PROFILE_CPU</td>
 <td>n</td>
 <td>Enable CPU profiling</td>
@@ -355,15 +367,9 @@
 </tr>
 
 <tr>
-<td>PAASBOX_LB_LOG</td>
-<td>n</td>
-<td>Enable load balancer logging</td>
-</tr>
-
-<tr>
-<td>PAASBOX_LOG</td>
-<td></td>
-<td>Logstash endpoint for centralised logging</td>
+<td>PB_STATE_DIR</td>
+<td><code>$HOME/.paasbox</code></td>
+<td>Directory to store BoltDB state files in</td>
 </tr>
 </tbody>
 </table>
@@ -382,6 +388,88 @@ pb https://some.domain/workspace.json
 
 <pre><code class="language-sh">pb ./example/workspaces.json https://some.domain/workspace.json
 </code></pre>
+
+<h2 id="workspace-configuration">Workspace configuration</h2>
+
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;example-workspace&quot;,
+  &quot;name&quot;: &quot;Example workspace&quot;,
+  &quot;log_path&quot;: &quot;./logs&quot;,
+  &quot;log_pattern&quot;: &quot;$WORKSPACE_ID$/$TASK_ID$/$INSTANCE_ID$/$NAME$.log&quot;,
+  &quot;env&quot;: {
+    &quot;inherit_all&quot;: false,
+    &quot;inherit&quot;: [ &quot;PATH&quot;, &quot;USER&quot;, &quot;HOME&quot; ],
+    &quot;remove&quot;: [ &quot;REMOVED_ENV_VAR&quot; ],
+    &quot;set&quot;: [ &quot;FOO=1&quot; ]
+  },
+  &quot;tasks&quot;: [
+    
+  ]
+}
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>A unique ID (should be globally unique and URL friendly)</td>
+</tr>
+
+<tr>
+<td><code>name</code></td>
+<td>A short title for the workspace</td>
+</tr>
+
+<tr>
+<td><code>log_path</code></td>
+<td>Where to store task log output</td>
+</tr>
+
+<tr>
+<td><code>log_pattern</code></td>
+<td>The pattern used when creating log file paths/names</td>
+</tr>
+
+<tr>
+<td><code>env</code></td>
+<td>Environment configuration</td>
+</tr>
+
+<tr>
+<td><code>env.inherit_all</code></td>
+<td><code>true</code> imports all environment variables from the parent process</td>
+</tr>
+
+<tr>
+<td><code>env.inherit</code></td>
+<td>An array of environment variables to import</td>
+</tr>
+
+<tr>
+<td><code>env.remove</code></td>
+<td>An array of environment variables to remove (e.g. combined with <code>env.inherit_all</code>)</td>
+</tr>
+
+<tr>
+<td><code>env.set</code></td>
+<td>An array of <code>KEY=value</code> environment variables to set</td>
+</tr>
+
+<tr>
+<td><code>tasks</code></td>
+<td>An array of tasks (see below for details)</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="task-configuration">Task configuration</h2>
 
 
 			<aside class="copyright" role="note">

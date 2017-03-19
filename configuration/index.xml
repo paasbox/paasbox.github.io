@@ -45,6 +45,18 @@
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;PAASBOX_LB_LOG&lt;/td&gt;
+&lt;td&gt;n&lt;/td&gt;
+&lt;td&gt;Enable load balancer logging&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;PAASBOX_LOG&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;Logstash endpoint for centralised logging&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;PAASBOX_PROFILE_CPU&lt;/td&gt;
 &lt;td&gt;n&lt;/td&gt;
 &lt;td&gt;Enable CPU profiling&lt;/td&gt;
@@ -57,15 +69,9 @@
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;PAASBOX_LB_LOG&lt;/td&gt;
-&lt;td&gt;n&lt;/td&gt;
-&lt;td&gt;Enable load balancer logging&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;PAASBOX_LOG&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;Logstash endpoint for centralised logging&lt;/td&gt;
+&lt;td&gt;PB_STATE_DIR&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;$HOME/.paasbox&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Directory to store BoltDB state files in&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -84,6 +90,88 @@ pb https://some.domain/workspace.json
 
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;pb ./example/workspaces.json https://some.domain/workspace.json
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;workspace-configuration&#34;&gt;Workspace configuration&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+  &amp;quot;id&amp;quot;: &amp;quot;example-workspace&amp;quot;,
+  &amp;quot;name&amp;quot;: &amp;quot;Example workspace&amp;quot;,
+  &amp;quot;log_path&amp;quot;: &amp;quot;./logs&amp;quot;,
+  &amp;quot;log_pattern&amp;quot;: &amp;quot;$WORKSPACE_ID$/$TASK_ID$/$INSTANCE_ID$/$NAME$.log&amp;quot;,
+  &amp;quot;env&amp;quot;: {
+    &amp;quot;inherit_all&amp;quot;: false,
+    &amp;quot;inherit&amp;quot;: [ &amp;quot;PATH&amp;quot;, &amp;quot;USER&amp;quot;, &amp;quot;HOME&amp;quot; ],
+    &amp;quot;remove&amp;quot;: [ &amp;quot;REMOVED_ENV_VAR&amp;quot; ],
+    &amp;quot;set&amp;quot;: [ &amp;quot;FOO=1&amp;quot; ]
+  },
+  &amp;quot;tasks&amp;quot;: [
+    
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Field&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;id&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;A unique ID (should be globally unique and URL friendly)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;name&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;A short title for the workspace&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;log_path&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Where to store task log output&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;log_pattern&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;The pattern used when creating log file paths/names&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;env&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Environment configuration&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;env.inherit_all&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;true&lt;/code&gt; imports all environment variables from the parent process&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;env.inherit&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;An array of environment variables to import&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;env.remove&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;An array of environment variables to remove (e.g. combined with &lt;code&gt;env.inherit_all&lt;/code&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;env.set&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;An array of &lt;code&gt;KEY=value&lt;/code&gt; environment variables to set&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tasks&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;An array of tasks (see below for details)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;task-configuration&#34;&gt;Task configuration&lt;/h2&gt;
 </description>
     </item>
     
