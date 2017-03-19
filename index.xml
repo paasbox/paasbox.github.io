@@ -109,7 +109,7 @@ pb https://some.domain/workspace.json
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;pb https://raw.githubusercontent.com/paasbox/paasbox/master/example/workspaces.json
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Then open your browser at [&lt;a href=&#34;http://localhost:8080](&#34;&gt;http://localhost:8080](&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;Then open your browser at &lt;a href=&#34;http://localhost:8080&#34;&gt;http://localhost:8080&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
