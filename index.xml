@@ -157,9 +157,9 @@ SOFTWARE.&lt;/p&gt;
       <guid>http://paasbox.io/</guid>
       <description>
 
-&lt;h2 id=&#34;paas-in-a-box&#34;&gt;PaaS in a box&lt;/h2&gt;
+&lt;p&gt;paasbox is a lightweight PaaS environment for local development of microservices and other 12-factor apps.&lt;/p&gt;
 
-&lt;p&gt;paasbox is a lightweight PaaS environment (like Mesos or Kubernetes) for local development of microservices and other 12-factor apps.&lt;/p&gt;
+&lt;p&gt;It simulates environments like Mesos or Kubernetes.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;http://paasbox.io/images/screen.png&#34; alt=&#34;paasbox screenshot&#34; /&gt;&lt;/p&gt;
 
