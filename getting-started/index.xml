@@ -20,7 +20,19 @@
 
 &lt;h2 id=&#34;quick-start&#34;&gt;Quick start&lt;/h2&gt;
 
-&lt;p&gt;Quick start&lt;/p&gt;
+&lt;p&gt;If you have a working Go development environment:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;go get github.com/paasbox/paasbox/cmd/pb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Otherwise download the &lt;code&gt;pb&lt;/code&gt; binary to &lt;code&gt;$PATH&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Start paasbox and load an example workspace:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;pb https://raw.githubusercontent.com/paasbox/paasbox/master/example/workspaces.json
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then open your browser at [&lt;a href=&#34;http://localhost:8080](&#34;&gt;http://localhost:8080](&lt;/a&gt;)&lt;/p&gt;
 </description>
     </item>
     
