@@ -2,57 +2,101 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://paasbox.io/configuration/</loc>
-    <lastmod>2016-03-08T21:07:13+01:00</lastmod>
-  </url>
-  
-  <url>
     <loc>http://paasbox.io/getting-started/</loc>
-    <lastmod>2016-03-08T21:07:13+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://paasbox.io/license/</loc>
-    <lastmod>2016-03-08T21:07:13+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://paasbox.io/roadmap/</loc>
-    <lastmod>2016-03-08T21:07:13+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://paasbox.io/</loc>
-    <lastmod>2016-03-08T21:07:13+01:00</lastmod>
+    <lastmod>2016-03-08T21:00:00+01:00</lastmod>
   </url>
   
   <url>
     <loc>http://paasbox.io/configuration/</loc>
-    <lastmod>2016-03-08T21:07:13+01:00</lastmod>
+    <lastmod>2016-03-08T21:05:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://paasbox.io/workspaces/</loc>
+    <lastmod>2016-03-08T21:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://paasbox.io/tasks/</loc>
+    <lastmod>2016-03-08T21:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://paasbox.io/roadmap/</loc>
+    <lastmod>2016-03-08T21:10:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://paasbox.io/load-balancer/</loc>
+    <lastmod>2016-03-08T21:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://paasbox.io/license/</loc>
+    <lastmod>2016-03-08T21:15:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://paasbox.io/logging/</loc>
+    <lastmod>2016-03-08T21:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://paasbox.io/</loc>
+    <lastmod>2016-03-08T20:55:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://paasbox.io/configuration/</loc>
+    <lastmod>2016-03-08T21:05:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://paasbox.io/getting-started/</loc>
-    <lastmod>2016-03-08T21:07:13+01:00</lastmod>
+    <lastmod>2016-03-08T21:00:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://paasbox.io/license/</loc>
-    <lastmod>2016-03-08T21:07:13+01:00</lastmod>
+    <lastmod>2016-03-08T21:15:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://paasbox.io/load-balancer/</loc>
+    <lastmod>2016-03-08T21:00:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://paasbox.io/logging/</loc>
+    <lastmod>2016-03-08T21:00:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://paasbox.io/roadmap/</loc>
-    <lastmod>2016-03-08T21:07:13+01:00</lastmod>
+    <lastmod>2016-03-08T21:10:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://paasbox.io/tasks/</loc>
+    <lastmod>2016-03-08T21:00:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://paasbox.io/workspaces/</loc>
+    <lastmod>2016-03-08T21:00:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://paasbox.io/</loc>
-    <lastmod>2016-03-08T21:07:13+01:00</lastmod>
+    <lastmod>2016-03-08T21:00:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Load-balancers on paasbox</title>
+    <link>http://paasbox.io/load-balancer/index.xml</link>
+    <description>Recent content in Load-balancers on paasbox</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Released under the MIT license</copyright>
+    <lastBuildDate>Tue, 08 Mar 2016 21:00:00 +0100</lastBuildDate>
+    <atom:link href="http://paasbox.io/load-balancer/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Load balancer</title>
+      <link>http://paasbox.io/load-balancer/</link>
+      <pubDate>Tue, 08 Mar 2016 21:00:00 +0100</pubDate>
+      
+      <guid>http://paasbox.io/load-balancer/</guid>
+      <description>
+
+&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+
+&lt;p&gt;paasbox includes an embedded load balancer, simulating the way HAProxy or nginx
+might be used to route traffic within a PaaS cluster.&lt;/p&gt;
+
+&lt;p&gt;It uses the &amp;lsquo;service port&amp;rsquo; model for service discovery, and is enabled by default
+for any task with the &lt;code&gt;ports&lt;/code&gt; field.&lt;/p&gt;
+
+&lt;p&gt;Dynamically allocated port numbers are passed to the task using the &lt;code&gt;PORT&lt;/code&gt;, &lt;code&gt;PORT0&lt;/code&gt;,
+&lt;code&gt;PORT1&lt;/code&gt; (etc) environment variables.&lt;/p&gt;
+
+&lt;h2 id=&#34;api&#34;&gt;API&lt;/h2&gt;
+
+&lt;p&gt;The load balancer API is exposed at &lt;code&gt;/api/loadbalancer&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;logging&#34;&gt;Logging&lt;/h2&gt;
+
+&lt;p&gt;Load balancer logs are stored in-memory (unless centralised logging is configured).&lt;/p&gt;
+
+&lt;p&gt;A 50,000 entry circular buffer is used to avoid excessive memory usage.&lt;/p&gt;
+
+&lt;p&gt;The load balancer logs are available over HTTP at &lt;code&gt;/api/loadbalancer/logs&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can set &lt;code&gt;PAASBOX_LB_LOG=1&lt;/code&gt; environment variable to output load balancer logs to the console.&lt;/p&gt;
+
+&lt;h2 id=&#34;single-port-apps&#34;&gt;Single port apps&lt;/h2&gt;
+
+&lt;p&gt;If you have a task with a single port configured:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+    &amp;quot;id&amp;quot;: &amp;quot;foo-server&amp;quot;,
+    &amp;quot;name&amp;quot;: &amp;quot;Foo server&amp;quot;,
+    &amp;quot;service&amp;quot;: true,
+    &amp;quot;driver&amp;quot;: &amp;quot;exec&amp;quot;,
+    &amp;quot;command&amp;quot;: &amp;quot;/bin/foo-server&amp;quot;,
+    &amp;quot;args&amp;quot;: [ &amp;quot;-bind-addr&amp;quot;, &amp;quot;:$PORT&amp;quot; ],
+    &amp;quot;ports&amp;quot;: [ 15000 ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The port &lt;code&gt;15000&lt;/code&gt; will be added to the load balancer&lt;/li&gt;
+&lt;li&gt;A dynamically allocated port, e.g. &lt;code&gt;56271&lt;/code&gt; is passed in as &lt;code&gt;PORT&lt;/code&gt; and &lt;code&gt;PORT0&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;The allocated port, &lt;code&gt;56271&lt;/code&gt;, is added to the load balancer&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;-bind-addr&lt;/code&gt; value is set to &lt;code&gt;:56271&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This means all network traffic to port &lt;code&gt;15000&lt;/code&gt; will be handled by paasbox, and
+forwarded to the currently running application instance.&lt;/p&gt;
+
+&lt;h2 id=&#34;multiple-port-apps&#34;&gt;Multiple port apps&lt;/h2&gt;
+
+&lt;p&gt;If you have a task with a multiple ports configured:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+    &amp;quot;id&amp;quot;: &amp;quot;foo-server&amp;quot;,
+    &amp;quot;name&amp;quot;: &amp;quot;Foo server&amp;quot;,
+    &amp;quot;service&amp;quot;: true,
+    &amp;quot;driver&amp;quot;: &amp;quot;exec&amp;quot;,
+    &amp;quot;command&amp;quot;: &amp;quot;/bin/foo-server&amp;quot;,
+    &amp;quot;args&amp;quot;: [ &amp;quot;-ui-bind-addr&amp;quot;, &amp;quot;:$PORT0&amp;quot;, &amp;quot;-api-bind-addr&amp;quot;, &amp;quot;:$PORT1&amp;quot; ],
+    &amp;quot;ports&amp;quot;: [ 15000, 16000 ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The ports &lt;code&gt;15000&lt;/code&gt; and &lt;code&gt;16000&lt;/code&gt; will be added to the load balancer&lt;/li&gt;
+&lt;li&gt;A dynamically allocated port, e.g. &lt;code&gt;56271&lt;/code&gt; is passed in as &lt;code&gt;PORT&lt;/code&gt; and &lt;code&gt;PORT0&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Another dynamically allocated port, e.g. &lt;code&gt;54115&lt;/code&gt; is passed in as &lt;code&gt;PORT1&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;The allocated port, &lt;code&gt;56271&lt;/code&gt;, is added to the load balancer for port &lt;code&gt;15000&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;The allocated port, &lt;code&gt;54115&lt;/code&gt;, is added to the load balancer for port &lt;code&gt;16000&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;-ui-bind-addr&lt;/code&gt; value is set to &lt;code&gt;:56271&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;-api-bind-addr&lt;/code&gt; value is set to &lt;code&gt;:54115&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This means all network traffic to port &lt;code&gt;15000&lt;/code&gt; and &lt;code&gt;16000&lt;/code&gt; will be handled by paasbox,
+and forwarded to the appropriate port of the currently running application instance.&lt;/p&gt;
+
+&lt;h2 id=&#34;multiple-instances&#34;&gt;Multiple instances&lt;/h2&gt;
+
+&lt;p&gt;If you have a task with a single port and multiple instances configured:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+    &amp;quot;id&amp;quot;: &amp;quot;foo-server&amp;quot;,
+    &amp;quot;name&amp;quot;: &amp;quot;Foo server&amp;quot;,
+    &amp;quot;service&amp;quot;: true,
+    &amp;quot;driver&amp;quot;: &amp;quot;exec&amp;quot;,
+    &amp;quot;command&amp;quot;: &amp;quot;/bin/foo-server&amp;quot;,
+    &amp;quot;args&amp;quot;: [ &amp;quot;-bind-addr&amp;quot;, &amp;quot;:$PORT&amp;quot; ],
+    &amp;quot;ports&amp;quot;: [ 15000 ],
+    &amp;quot;instances&amp;quot;: 2
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The port &lt;code&gt;15000&lt;/code&gt; will be added to the load balancer&lt;/li&gt;
+&lt;li&gt;A dynamically allocated port, e.g. &lt;code&gt;56271&lt;/code&gt; is passed in as &lt;code&gt;PORT&lt;/code&gt; and &lt;code&gt;PORT0&lt;/code&gt; to instance 0&lt;/li&gt;
+&lt;li&gt;A dynamically allocated port, e.g. &lt;code&gt;54115&lt;/code&gt; is passed in as &lt;code&gt;PORT&lt;/code&gt; and &lt;code&gt;PORT0&lt;/code&gt; to instance 1&lt;/li&gt;
+&lt;li&gt;The allocated ports, &lt;code&gt;56271&lt;/code&gt; and &lt;code&gt;54115&lt;/code&gt;, are added to the load balancer&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;-bind-addr&lt;/code&gt; value is set to &lt;code&gt;:56271&lt;/code&gt; for instance 0&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;-bind-addr&lt;/code&gt; value is set to &lt;code&gt;:54115&lt;/code&gt; for instance 1&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This means all network traffic to port &lt;code&gt;15000&lt;/code&gt; will be handled by paasbox, and
+forwarded (randomly selected) to one of the currently running application instances.&lt;/p&gt;
+
+&lt;p&gt;Multiple ports with multiple instances works as you&amp;rsquo;d expect - each &amp;lsquo;service port&amp;rsquo; is forwarded
+to a randomly selected instance on the appropriate allocated port number.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

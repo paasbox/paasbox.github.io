@@ -9,18 +9,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=10" />
-    <title>License - paasbox</title>
+    <title>Load balancer - paasbox</title>
     <meta name="generator" content="Hugo 0.19" />
 
     
     <meta name="description" content="PaaS - in a box!">
     
-    <link rel="canonical" href="http://paasbox.io/license/">
+    <link rel="canonical" href="http://paasbox.io/load-balancer/">
     
     <meta name="author" content="Ian Kent">
     
 
-    <meta property="og:url" content="http://paasbox.io/license/">
+    <meta property="og:url" content="http://paasbox.io/load-balancer/">
     <meta property="og:title" content="paasbox">
     <meta property="og:image" content="http://paasbox.io/images/logo.png">
     <meta name="apple-mobile-web-app-title" content="paasbox">
@@ -97,7 +97,7 @@
     </div>
     <div class="stretch">
       <div class="title">
-        License
+        Load balancer
       </div>
     </div>
 
@@ -274,11 +274,14 @@
 
 
 
-<a  title="Load balancer" href="/load-balancer/">
+<a class="current" title="Load balancer" href="/load-balancer/">
 	
 	Load balancer
 </a>
 
+
+<ul id="scrollspy">
+</ul>
 
 
   
@@ -328,14 +331,11 @@
 
 
 
-<a class="current" title="License" href="/license/">
+<a  title="License" href="/license/">
 	
 	License
 </a>
 
-
-<ul id="scrollspy">
-</ul>
 
 
   
@@ -384,33 +384,118 @@
 
 	<article class="article">
 		<div class="wrapper">
-			<h1>License </h1>
+			<h1>Load balancer </h1>
 
 			
 
-<p>paasbox is released under the MIT license.</p>
+<h2 id="overview">Overview</h2>
 
-<h2 id="the-mit-license-mit">The MIT License (MIT)</h2>
+<p>paasbox includes an embedded load balancer, simulating the way HAProxy or nginx
+might be used to route traffic within a PaaS cluster.</p>
 
-<p>Copyright &copy; 2014 - 2017 Ian Kent</p>
+<p>It uses the &lsquo;service port&rsquo; model for service discovery, and is enabled by default
+for any task with the <code>ports</code> field.</p>
 
-<p>Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the &ldquo;Software&rdquo;), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:</p>
+<p>Dynamically allocated port numbers are passed to the task using the <code>PORT</code>, <code>PORT0</code>,
+<code>PORT1</code> (etc) environment variables.</p>
 
-<p>The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.</p>
+<h2 id="api">API</h2>
 
-<p>THE SOFTWARE IS PROVIDED &ldquo;AS IS&rdquo;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.</p>
+<p>The load balancer API is exposed at <code>/api/loadbalancer</code>.</p>
+
+<h2 id="logging">Logging</h2>
+
+<p>Load balancer logs are stored in-memory (unless centralised logging is configured).</p>
+
+<p>A 50,000 entry circular buffer is used to avoid excessive memory usage.</p>
+
+<p>The load balancer logs are available over HTTP at <code>/api/loadbalancer/logs</code>.</p>
+
+<p>You can set <code>PAASBOX_LB_LOG=1</code> environment variable to output load balancer logs to the console.</p>
+
+<h2 id="single-port-apps">Single port apps</h2>
+
+<p>If you have a task with a single port configured:</p>
+
+<pre><code class="language-json">{
+    &quot;id&quot;: &quot;foo-server&quot;,
+    &quot;name&quot;: &quot;Foo server&quot;,
+    &quot;service&quot;: true,
+    &quot;driver&quot;: &quot;exec&quot;,
+    &quot;command&quot;: &quot;/bin/foo-server&quot;,
+    &quot;args&quot;: [ &quot;-bind-addr&quot;, &quot;:$PORT&quot; ],
+    &quot;ports&quot;: [ 15000 ]
+}
+</code></pre>
+
+<ul>
+<li>The port <code>15000</code> will be added to the load balancer</li>
+<li>A dynamically allocated port, e.g. <code>56271</code> is passed in as <code>PORT</code> and <code>PORT0</code></li>
+<li>The allocated port, <code>56271</code>, is added to the load balancer</li>
+<li>The <code>-bind-addr</code> value is set to <code>:56271</code></li>
+</ul>
+
+<p>This means all network traffic to port <code>15000</code> will be handled by paasbox, and
+forwarded to the currently running application instance.</p>
+
+<h2 id="multiple-port-apps">Multiple port apps</h2>
+
+<p>If you have a task with a multiple ports configured:</p>
+
+<pre><code class="language-json">{
+    &quot;id&quot;: &quot;foo-server&quot;,
+    &quot;name&quot;: &quot;Foo server&quot;,
+    &quot;service&quot;: true,
+    &quot;driver&quot;: &quot;exec&quot;,
+    &quot;command&quot;: &quot;/bin/foo-server&quot;,
+    &quot;args&quot;: [ &quot;-ui-bind-addr&quot;, &quot;:$PORT0&quot;, &quot;-api-bind-addr&quot;, &quot;:$PORT1&quot; ],
+    &quot;ports&quot;: [ 15000, 16000 ]
+}
+</code></pre>
+
+<ul>
+<li>The ports <code>15000</code> and <code>16000</code> will be added to the load balancer</li>
+<li>A dynamically allocated port, e.g. <code>56271</code> is passed in as <code>PORT</code> and <code>PORT0</code></li>
+<li>Another dynamically allocated port, e.g. <code>54115</code> is passed in as <code>PORT1</code></li>
+<li>The allocated port, <code>56271</code>, is added to the load balancer for port <code>15000</code></li>
+<li>The allocated port, <code>54115</code>, is added to the load balancer for port <code>16000</code></li>
+<li>The <code>-ui-bind-addr</code> value is set to <code>:56271</code></li>
+<li>The <code>-api-bind-addr</code> value is set to <code>:54115</code></li>
+</ul>
+
+<p>This means all network traffic to port <code>15000</code> and <code>16000</code> will be handled by paasbox,
+and forwarded to the appropriate port of the currently running application instance.</p>
+
+<h2 id="multiple-instances">Multiple instances</h2>
+
+<p>If you have a task with a single port and multiple instances configured:</p>
+
+<pre><code class="language-json">{
+    &quot;id&quot;: &quot;foo-server&quot;,
+    &quot;name&quot;: &quot;Foo server&quot;,
+    &quot;service&quot;: true,
+    &quot;driver&quot;: &quot;exec&quot;,
+    &quot;command&quot;: &quot;/bin/foo-server&quot;,
+    &quot;args&quot;: [ &quot;-bind-addr&quot;, &quot;:$PORT&quot; ],
+    &quot;ports&quot;: [ 15000 ],
+    &quot;instances&quot;: 2
+}
+</code></pre>
+
+<ul>
+<li>The port <code>15000</code> will be added to the load balancer</li>
+<li>A dynamically allocated port, e.g. <code>56271</code> is passed in as <code>PORT</code> and <code>PORT0</code> to instance 0</li>
+<li>A dynamically allocated port, e.g. <code>54115</code> is passed in as <code>PORT</code> and <code>PORT0</code> to instance 1</li>
+<li>The allocated ports, <code>56271</code> and <code>54115</code>, are added to the load balancer</li>
+<li>The <code>-bind-addr</code> value is set to <code>:56271</code> for instance 0</li>
+<li>The <code>-bind-addr</code> value is set to <code>:54115</code> for instance 1</li>
+</ul>
+
+<p>This means all network traffic to port <code>15000</code> will be handled by paasbox, and
+forwarded (randomly selected) to one of the currently running application instances.</p>
+
+<p>Multiple ports with multiple instances works as you&rsquo;d expect - each &lsquo;service port&rsquo; is forwarded
+to a randomly selected instance on the appropriate allocated port number.</p>
 
 
 			<aside class="copyright" role="note">
@@ -429,7 +514,7 @@ SOFTWARE.</p>
 <nav class="pagination" aria-label="Footer">
   <div class="previous">
   
-      <a href="http://paasbox.io/load-balancer/" title="Load balancer">
+      <a href="http://paasbox.io/roadmap/" title="Roadmap">
         <span class="direction">
           Previous
         </span>
@@ -439,7 +524,7 @@ SOFTWARE.</p>
           </div>
           <div class="stretch">
             <div class="title">
-              Load balancer
+              Roadmap
             </div>
           </div>
         </div>
@@ -449,14 +534,14 @@ SOFTWARE.</p>
 
   <div class="next">
   
-      <a href="http://paasbox.io/logging/" title="Logging">
+      <a href="http://paasbox.io/license/" title="License">
         <span class="direction">
           Next
         </span>
         <div class="page">
           <div class="stretch">
             <div class="title">
-              Logging
+              License
             </div>
           </div>
           <div class="button button-next" role="button" aria-label="Next">
