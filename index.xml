@@ -211,7 +211,23 @@ pb https://some.domain/workspace.json
 
 &lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
 
-&lt;p&gt;Moo&lt;/p&gt;
+&lt;p&gt;A workspace is a related collection of tasks.&lt;/p&gt;
+
+&lt;p&gt;Each workspace can define its own environment variables and logging configuration.&lt;/p&gt;
+
+&lt;p&gt;A workspace configuration file can define one or more workspaces.&lt;/p&gt;
+
+&lt;h2 id=&#34;workspace-ids&#34;&gt;Workspace IDs&lt;/h2&gt;
+
+&lt;p&gt;Workspace IDs are used by paasbox, to:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Generate the &lt;code&gt;.db&lt;/code&gt; state file filename (generally &lt;code&gt;$HOME/.paasbox/$WORKSPACE_ID.db&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Generate the log path (generally &lt;code&gt;./logs/$WORKSPACE_ID/...&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For this reason, workspace IDs should ideally be globally unique (or, unique enough that
+an individual user is unlikely to see a workspace ID collision).&lt;/p&gt;
 </description>
     </item>
     

@@ -390,7 +390,23 @@
 
 <h2 id="overview">Overview</h2>
 
-<p>Moo</p>
+<p>A workspace is a related collection of tasks.</p>
+
+<p>Each workspace can define its own environment variables and logging configuration.</p>
+
+<p>A workspace configuration file can define one or more workspaces.</p>
+
+<h2 id="workspace-ids">Workspace IDs</h2>
+
+<p>Workspace IDs are used by paasbox, to:</p>
+
+<ul>
+<li>Generate the <code>.db</code> state file filename (generally <code>$HOME/.paasbox/$WORKSPACE_ID.db</code>)</li>
+<li>Generate the log path (generally <code>./logs/$WORKSPACE_ID/...</code>)</li>
+</ul>
+
+<p>For this reason, workspace IDs should ideally be globally unique (or, unique enough that
+an individual user is unlikely to see a workspace ID collision).</p>
 
 
 			<aside class="copyright" role="note">
